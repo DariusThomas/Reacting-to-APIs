@@ -7,7 +7,7 @@ class App extends Component {
         super(props);
         this.state = {
             filmArr: [],
-            peopleArr:[]
+            peopleArr: []
         }
         this.handleClick = this.handleClick.bind(this);
         this.handleOtherClick = this.handleOtherClick.bind(this)
@@ -26,21 +26,22 @@ class App extends Component {
     handleClick() {
         fetch("https://ghibliapi.herokuapp.com/films")
             .then(res => res.json())
-            .then(obj => this.setState({
-            filmArr: [...obj]
+            .then(filmArr => this.setState({
+                peopleArr:[],
+                filmArr
             }))
             .catch(e => console.log(e));
     }
     handleOtherClick() {
         fetch("https://ghibliapi.herokuapp.com/people")
             .then(res => res.json())
-            .then(obj => this.setState({
-                peopleArr: [...obj]
+            .then(peopleArr => this.setState({
+                peopleArr,
+                filmArr:[]
             }))
             .catch(e => console.log(e));
     }
     render() {
-        console.log(this.state.peopleArr)
         return (
             <>
                 <div>
@@ -50,8 +51,12 @@ class App extends Component {
                     <input onClick={this.handleClick} type="button" value="Load Films" className=" m-1 btn btn-primary" />
                     <input onClick={this.handleOtherClick} type="button" value="Load People" className="m-1 btn btn-primary" />
                 </div>
-                <FilmInfo films={this.state.filmArr} />
-                <PeopleInfo people={this.state.peopleArr} />
+                {this.state.filmArr.map(film =>
+                    <FilmInfo key={film.id} filmInfo={film} />
+                )}
+                {this.state.peopleArr.map(people =>
+                    <PeopleInfo key={people.id} peopleInfo={people} />
+                )}
             </>
         )
     }
